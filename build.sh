@@ -2,6 +2,7 @@
 # ./build.sh          build ./build/Rounded Corners.app (arm64, ad-hoc signed)
 # ./build.sh install  build, replace /Applications/Rounded Corners.app and launch it
 # ./build.sh zip      build and create ./build/RoundedCorners.zip to share
+# ./build.sh dmg      build and create ./build/RoundedCorners.dmg to share (drag to Applications)
 # ./build.sh test     build and run unit & UI lifecycle test suite
 set -e
 cd "$(dirname "$0")"
@@ -30,4 +31,10 @@ case "$1" in
   zip)
     ditto -c -k --keepParent "$APP" build/RoundedCorners.zip
     echo "build/RoundedCorners.zip" ;;
+  dmg)
+    mkdir -p build/dmg
+    ditto "$APP" "build/dmg/Rounded Corners.app"
+    ln -s /Applications build/dmg/Applications
+    hdiutil create -volname "Rounded Corners" -srcfolder build/dmg -ov -format UDZO build/RoundedCorners.dmg
+    echo "build/RoundedCorners.dmg" ;;
 esac
