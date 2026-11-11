@@ -36,5 +36,6 @@ case "$1" in
     ditto "$APP" "build/dmg/Rounded Corners.app"
     ln -s /Applications build/dmg/Applications
     hdiutil create -volname "Rounded Corners" -srcfolder build/dmg -ov -format UDZO build/RoundedCorners.dmg
+    rm -rf build/dmg
     echo "build/RoundedCorners.dmg" ;;
 esac
