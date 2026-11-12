@@ -204,23 +204,23 @@ void test_mockup_view_interaction(void) {
     for (id el in axChildren) {
         assert([[el accessibilityRole] isEqualToString:NSAccessibilityButtonRole]);
         assert([[el accessibilityLabel] length] > 0);
-        assert([[el accessibilityValue] isEqualToString:@"Attivo"]);
+        assert([[el accessibilityValue] isEqualToString:@"Active"]);
     }
     // Test accessibilityPerformPress toggles corner
     id firstAx = axChildren.firstObject;
     BOOL pressed = [firstAx accessibilityPerformPress];
     assert(pressed == YES);
     assert(!(mockup.corners & CornerTL));
-    assert([[firstAx accessibilityValue] isEqualToString:@"Disattivo"]);
+    assert([[firstAx accessibilityValue] isEqualToString:@"Inactive"]);
     // Press again to toggle back
     pressed = [firstAx accessibilityPerformPress];
     assert(pressed == YES);
     assert((mockup.corners & CornerTL));
-    assert([[firstAx accessibilityValue] isEqualToString:@"Attivo"]);
+    assert([[firstAx accessibilityValue] isEqualToString:@"Active"]);
 
     mockup.displayEnabled = NO;
     assert(mockup.accessibilityChildren.count == 0);
-    assert([mockup.accessibilityValue containsString:@"disattivati"]);
+    assert([mockup.accessibilityValue containsString:@"disabled"]);
     mockup.displayEnabled = YES;
 
     printf("PASSED\n");
@@ -240,7 +240,7 @@ void test_ui_construction_and_deallocation(void) {
     assert(prefsWin.tabbingMode == NSWindowTabbingModeDisallowed);
 
     // Verify unified controls exist
-    NSButton *applyCheckbox = FindButtonWithTitle(prefsWin.contentView, @"Applica le stesse impostazioni a tutti i monitor");
+    NSButton *applyCheckbox = FindButtonWithTitle(prefsWin.contentView, @"Apply same settings to all displays");
     assert(applyCheckbox != nil);
 
     NSPopUpButton *popup = FindPopUpButton(prefsWin.contentView);
@@ -249,7 +249,7 @@ void test_ui_construction_and_deallocation(void) {
     NSSwitch *sw = FindSwitch(prefsWin.contentView);
     assert(sw != nil);
 
-    NSButton *quitBtn = FindButtonWithTitle(prefsWin.contentView, @"Esci da Rounded Corners");
+    NSButton *quitBtn = FindButtonWithTitle(prefsWin.contentView, @"Quit Rounded Corners");
     assert(quitBtn != nil);
 
     // Verify accessibility attributes (Apple HIG)
@@ -261,7 +261,7 @@ void test_ui_construction_and_deallocation(void) {
 
     // Verify initialFirstResponder and Full Keyboard Access nextKeyView chain (Apple HIG)
     assert(prefsWin.initialFirstResponder == applyCheckbox);
-    NSButton *loginBtn = FindButtonWithTitle(prefsWin.contentView, @"Avvia al login");
+    NSButton *loginBtn = FindButtonWithTitle(prefsWin.contentView, @"Launch at login");
     assert(loginBtn != nil);
     ScreenMockupView *mockupView = [delegate valueForKey:@"_mockup"];
     assert(mockupView != nil);
@@ -293,7 +293,7 @@ void test_ui_construction_and_deallocation(void) {
     assert(popup.enabled == NO);
     assert(sw.enabled == NO);
     assert(sw.state == NSControlStateValueOn);
-    assert([popup.title containsString:@"Tutti i monitor"]);
+    assert([popup.title containsString:@"All connected displays"]);
 
     // Test Per-monitor mode (apply to all screens unchecked)
     [delegate setApplyToAllScreens:NO];
@@ -309,20 +309,20 @@ void test_ui_construction_and_deallocation(void) {
     NSTextField *sliderLabel = [delegate valueForKey:@"_sliderLabel"];
     assert(mockup.displayEnabled == NO);
     assert(slider.enabled == NO);
-    assert([sliderLabel.stringValue containsString:@"inattivo"]);
+    assert([sliderLabel.stringValue containsString:@"inactive"]);
 
     // Test toggling display switch back ON
     sw.state = NSControlStateValueOn;
     [delegate onDisplaySwitchChanged:sw];
     assert(mockup.displayEnabled == YES);
     assert(slider.enabled == YES);
-    assert([sliderLabel.stringValue containsString:@"Raggio:"]);
-    assert(![sliderLabel.stringValue containsString:@"inattivo"]);
+    assert([sliderLabel.stringValue containsString:@"Radius:"]);
+    assert(![sliderLabel.stringValue containsString:@"inactive"]);
 
     // Test slider change updates label and multiConfig
     slider.doubleValue = 30.0;
     [delegate onSliderChanged:slider];
-    assert([sliderLabel.stringValue isEqualToString:@"Raggio: 30 pt"]);
+    assert([sliderLabel.stringValue isEqualToString:@"Radius: 30 pt"]);
 
     // Test mockup corners change updates multiConfig
     [delegate onMockupCornersChanged:(CornerBL)];
@@ -621,7 +621,7 @@ void test_settings_readability_and_radius_23(void) {
     assert(((NSSlider *)[delegate valueForKey:@"_slider"]).integerValue == kMinRadius);
 
     // 3. Verify footer quit button title, version label and hint label
-    NSButton *quitBtn = FindButtonWithTitle(prefsWin.contentView, @"Esci da Rounded Corners");
+    NSButton *quitBtn = FindButtonWithTitle(prefsWin.contentView, @"Quit Rounded Corners");
     assert(quitBtn != nil);
     assert(HasTextContaining(prefsWin.contentView, @"v1.0") == YES);
     assert(HasTextContaining(prefsWin.contentView, @"v2.0") == NO);
@@ -635,7 +635,7 @@ void test_settings_readability_and_radius_23(void) {
         NSSlider *slider = [delegate valueForKey:@"_slider"];
         slider.doubleValue = 30.0;
         [delegate onSliderChanged:slider];
-        assert([hintLabel.stringValue containsString:@"superiore a 23 pt"]);
+        assert([hintLabel.stringValue containsString:@"greater than 23 pt"]);
         // Restore 23
         slider.doubleValue = 23.0;
         [delegate onSliderChanged:slider];
@@ -720,16 +720,16 @@ void test_edge_cases_and_multi_monitor_popup(void) {
     assert(savedEntry[@"corners"] != nil);
 
     NSTextField *sliderLabel = [delegate valueForKey:@"_sliderLabel"];
-    assert([sliderLabel.stringValue containsString:@"(inattivo)"]);
+    assert([sliderLabel.stringValue containsString:@"(inactive)"]);
 
-    // Test slider change while disabled preserves enabled=NO and updates label with (inattivo)
+    // Test slider change while disabled preserves enabled=NO and updates label with (inactive)
     NSSlider *slider = [delegate valueForKey:@"_slider"];
     slider.doubleValue = 40.0;
     [delegate onSliderChanged:slider];
     savedEntry = [delegate multiConfig][testUUID];
     assert([savedEntry[@"enabled"] boolValue] == NO);
     assert([savedEntry[@"radius"] integerValue] == 40);
-    assert([sliderLabel.stringValue containsString:@"40 pt (inattivo)"]);
+    assert([sliderLabel.stringValue containsString:@"40 pt (inactive)"]);
 
     // Test mockup corners change preserves enabled=NO and radius=40
     [delegate onMockupCornersChanged:(CornerBL | CornerBR)];
@@ -744,11 +744,11 @@ void test_edge_cases_and_multi_monitor_popup(void) {
 
     // 5. Test NSPopUpButton duplicate titles and menu item addition resilience
     NSPopUpButton *testPopup = [[NSPopUpButton alloc] initWithFrame:NSZeroRect pullsDown:NO];
-    NSMenuItem *ext1 = [[NSMenuItem alloc] initWithTitle:@"🖥️ Dell U2720Q (Esterno 1)" action:NULL keyEquivalent:@""];
+    NSMenuItem *ext1 = [[NSMenuItem alloc] initWithTitle:@"🖥️ Dell U2720Q (External 1)" action:NULL keyEquivalent:@""];
     ext1.representedObject = @"DELL-UUID-1";
     [testPopup.menu addItem:ext1];
 
-    NSMenuItem *ext2 = [[NSMenuItem alloc] initWithTitle:@"🖥️ Dell U2720Q (Esterno 2)" action:NULL keyEquivalent:@""];
+    NSMenuItem *ext2 = [[NSMenuItem alloc] initWithTitle:@"🖥️ Dell U2720Q (External 2)" action:NULL keyEquivalent:@""];
     ext2.representedObject = @"DELL-UUID-2";
     [testPopup.menu addItem:ext2];
 
@@ -776,14 +776,14 @@ void test_edge_cases_and_multi_monitor_popup(void) {
 
     [delegate updateUI];
     assert(popup.numberOfItems == 1);
-    assert([[popup itemAtIndex:0].title isEqualToString:@"Nessun display"]);
+    assert([[popup itemAtIndex:0].title isEqualToString:@"No displays"]);
     assert(popup.enabled == NO);
     assert(sw.enabled == NO);
     assert(sw.state == NSControlStateValueOff);
     ScreenMockupView *mockupView = [delegate valueForKey:@"_mockup"];
     assert(mockupView.displayEnabled == NO);
     assert(slider.enabled == NO);
-    assert([sliderLabel.stringValue isEqualToString:@"Nessun monitor rilevato"]);
+    assert([sliderLabel.stringValue isEqualToString:@"No displays detected"]);
 
     // Restore real screens
     method_exchangeImplementations(origScreens, mockScreens);

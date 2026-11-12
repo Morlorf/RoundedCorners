@@ -137,7 +137,7 @@ static void PinWindow(NSWindow *w) {
 
 - (id)accessibilityValue {
     if (!self.mockupView) return @"";
-    return (self.mockupView.corners & self.mask) ? @"Attivo" : @"Disattivo";
+    return (self.mockupView.corners & self.mask) ? @"Active" : @"Inactive";
 }
 
 - (BOOL)accessibilityPerformPress {
@@ -210,24 +210,24 @@ static void PinWindow(NSWindow *w) {
 }
 
 - (NSString *)accessibilityLabel {
-    return @"Anteprima schermo e selezione angoli";
+    return @"Screen preview and corner selection";
 }
 
 - (NSString *)accessibilityHelp {
-    return @"Seleziona o deseleziona i singoli angoli da arrotondare";
+    return @"Select or deselect individual corners to round";
 }
 
 - (id)accessibilityValue {
-    return _displayEnabled ? nil : @"Angoli disattivati su questo display";
+    return _displayEnabled ? nil : @"Corners disabled on this display";
 }
 
 - (NSArray *)accessibilityChildren {
     if (!_displayEnabled) return @[];
     return @[
-        [CornerAccessibilityElement elementWithParent:self mask:CornerTL title:@"Angolo superiore sinistro (TL)"],
-        [CornerAccessibilityElement elementWithParent:self mask:CornerTR title:@"Angolo superiore destro (TR)"],
-        [CornerAccessibilityElement elementWithParent:self mask:CornerBL title:@"Angolo inferiore sinistro (BL)"],
-        [CornerAccessibilityElement elementWithParent:self mask:CornerBR title:@"Angolo inferiore destro (BR)"]
+        [CornerAccessibilityElement elementWithParent:self mask:CornerTL title:@"Top-left corner (TL)"],
+        [CornerAccessibilityElement elementWithParent:self mask:CornerTR title:@"Top-right corner (TR)"],
+        [CornerAccessibilityElement elementWithParent:self mask:CornerBL title:@"Bottom-left corner (BL)"],
+        [CornerAccessibilityElement elementWithParent:self mask:CornerBR title:@"Bottom-right corner (BR)"]
     ];
 }
 
@@ -276,10 +276,10 @@ static void PinWindow(NSWindow *w) {
 
 - (NSString *)view:(NSView *)view stringForToolTip:(NSToolTipTag)tag point:(NSPoint)point userData:(void *)data {
     (void)view; (void)tag; (void)data;
-    if (NSPointInRect(point, [self tlRect])) return @"Angolo superiore sinistro (TL)";
-    if (NSPointInRect(point, [self trRect])) return @"Angolo superiore destro (TR)";
-    if (NSPointInRect(point, [self blRect])) return @"Angolo inferiore sinistro (BL)";
-    if (NSPointInRect(point, [self brRect])) return @"Angolo inferiore destro (BR)";
+    if (NSPointInRect(point, [self tlRect])) return @"Top-left corner (TL)";
+    if (NSPointInRect(point, [self trRect])) return @"Top-right corner (TR)";
+    if (NSPointInRect(point, [self blRect])) return @"Bottom-left corner (BL)";
+    if (NSPointInRect(point, [self brRect])) return @"Bottom-right corner (BR)";
     return nil;
 }
 
@@ -345,7 +345,7 @@ static void PinWindow(NSWindow *w) {
     NSRectFill(s);
 
     if (!_displayEnabled) {
-        NSString *disabledMsg = @"Angoli disattivati su questo display";
+        NSString *disabledMsg = @"Corners disabled on this display";
         NSMutableParagraphStyle *style = [NSMutableParagraphStyle new];
         style.alignment = NSTextAlignmentCenter;
         NSDictionary *attrs = @{
@@ -624,18 +624,18 @@ static void PinWindow(NSWindow *w) {
 
 - (void)buildMenu {
     NSMenu *bar = [NSMenu new], *app = [NSMenu new];
-    NSMenuItem *aboutItem = [app addItemWithTitle:@"Informazioni su Rounded Corners" action:@selector(orderFrontStandardAboutPanel:) keyEquivalent:@""];
+    NSMenuItem *aboutItem = [app addItemWithTitle:@"About Rounded Corners" action:@selector(orderFrontStandardAboutPanel:) keyEquivalent:@""];
     aboutItem.target = NSApp;
     [app addItem:[NSMenuItem separatorItem]];
-    NSMenuItem *settingsItem = [app addItemWithTitle:@"Impostazioni…" action:@selector(showPrefs) keyEquivalent:@","];
+    NSMenuItem *settingsItem = [app addItemWithTitle:@"Settings…" action:@selector(showPrefs) keyEquivalent:@","];
     settingsItem.target = self;
     [app addItem:[NSMenuItem separatorItem]];
-    NSMenuItem *quitItem = [app addItemWithTitle:@"Esci da Rounded Corners" action:@selector(terminate:) keyEquivalent:@"q"];
+    NSMenuItem *quitItem = [app addItemWithTitle:@"Quit Rounded Corners" action:@selector(terminate:) keyEquivalent:@"q"];
     quitItem.target = NSApp;
     [bar addItemWithTitle:@"" action:nil keyEquivalent:@""].submenu = app;
 
     NSMenu *fileMenu = [NSMenu new];
-    [fileMenu addItemWithTitle:@"Chiudi finestra" action:@selector(performClose:) keyEquivalent:@"w"];
+    [fileMenu addItemWithTitle:@"Close Window" action:@selector(performClose:) keyEquivalent:@"w"];
     [bar addItemWithTitle:@"File" action:nil keyEquivalent:@""].submenu = fileMenu;
 
     NSApp.mainMenu = bar;
@@ -857,7 +857,7 @@ static void PinWindow(NSWindow *w) {
     }
     iconView.image = appIcon;
     iconView.accessibilityRole = NSAccessibilityImageRole;
-    iconView.accessibilityLabel = @"Icona dell'applicazione Rounded Corners";
+    iconView.accessibilityLabel = @"Rounded Corners application icon";
     [iconView.widthAnchor constraintEqualToConstant:24].active = YES;
     [iconView.heightAnchor constraintEqualToConstant:24].active = YES;
     [topRow addArrangedSubview:iconView];
@@ -872,11 +872,11 @@ static void PinWindow(NSWindow *w) {
     [spacer1 setContentHuggingPriority:NSLayoutPriorityFittingSizeCompression forOrientation:NSLayoutConstraintOrientationHorizontal];
     [topRow addArrangedSubview:spacer1];
 
-    NSButton *login = [NSButton checkboxWithTitle:@"Avvia al login" target:self action:@selector(loginChanged:)];
+    NSButton *login = [NSButton checkboxWithTitle:@"Launch at login" target:self action:@selector(loginChanged:)];
     login.state = (SMAppService.mainAppService.status == SMAppServiceStatusEnabled) ? NSControlStateValueOn : NSControlStateValueOff;
     login.font = [NSFont systemFontOfSize:12];
-    login.accessibilityLabel = @"Avvia al login";
-    login.accessibilityHelp = @"Esegui automaticamente Rounded Corners all'accesso dell'utente";
+    login.accessibilityLabel = @"Launch at login";
+    login.accessibilityHelp = @"Launch Rounded Corners automatically when logging in";
     login.accessibilityRole = NSAccessibilityCheckBoxRole;
     [topRow addArrangedSubview:login];
 
@@ -889,12 +889,12 @@ static void PinWindow(NSWindow *w) {
     [sep1.widthAnchor constraintEqualToAnchor:st.widthAnchor].active = YES;
 
     // 2. Global Checkbox
-    _applyToAllCheckbox = [NSButton checkboxWithTitle:@"Applica le stesse impostazioni a tutti i monitor"
+    _applyToAllCheckbox = [NSButton checkboxWithTitle:@"Apply same settings to all displays"
                                                target:self
                                                action:@selector(onApplyToAllChanged:)];
     _applyToAllCheckbox.font = [NSFont systemFontOfSize:13 weight:NSFontWeightMedium];
-    _applyToAllCheckbox.accessibilityLabel = @"Applica le stesse impostazioni a tutti i monitor";
-    _applyToAllCheckbox.accessibilityHelp = @"Sincronizza le opzioni di curvatura e raggio su tutti gli schermi connessi";
+    _applyToAllCheckbox.accessibilityLabel = @"Apply same settings to all displays";
+    _applyToAllCheckbox.accessibilityHelp = @"Sync corner radius and selection across all connected screens";
     _applyToAllCheckbox.accessibilityRole = NSAccessibilityCheckBoxRole;
     [st addArrangedSubview:_applyToAllCheckbox];
     [_applyToAllCheckbox.leadingAnchor constraintEqualToAnchor:st.leadingAnchor].active = YES;
@@ -919,8 +919,8 @@ static void PinWindow(NSWindow *w) {
     _displayPopup.font = [NSFont systemFontOfSize:12];
     _displayPopup.lineBreakMode = NSLineBreakByTruncatingTail;
     [_displayPopup setContentCompressionResistancePriority:NSLayoutPriorityDefaultLow forOrientation:NSLayoutConstraintOrientationHorizontal];
-    _displayPopup.accessibilityLabel = @"Selezione monitor";
-    _displayPopup.accessibilityHelp = @"Scegli il display da configurare individualmente";
+    _displayPopup.accessibilityLabel = @"Display selection";
+    _displayPopup.accessibilityHelp = @"Choose the display to configure individually";
     _displayPopup.accessibilityRole = NSAccessibilityPopUpButtonRole;
     [_displayPopup.widthAnchor constraintGreaterThanOrEqualToConstant:200].active = YES;
     [dispRow addArrangedSubview:_displayPopup];
@@ -929,7 +929,7 @@ static void PinWindow(NSWindow *w) {
     [dispSpacer setContentHuggingPriority:NSLayoutPriorityFittingSizeCompression forOrientation:NSLayoutConstraintOrientationHorizontal];
     [dispRow addArrangedSubview:dispSpacer];
 
-    _displaySwitchLabel = [NSTextField labelWithString:@"Abilita:"];
+    _displaySwitchLabel = [NSTextField labelWithString:@"Enable:"];
     _displaySwitchLabel.font = [NSFont systemFontOfSize:12 weight:NSFontWeightMedium];
     _displaySwitchLabel.textColor = NSColor.labelColor;
     _displaySwitchLabel.accessibilityRole = NSAccessibilityStaticTextRole;
@@ -938,8 +938,8 @@ static void PinWindow(NSWindow *w) {
     _displaySwitch = [[NSSwitch alloc] initWithFrame:NSZeroRect];
     _displaySwitch.target = self;
     _displaySwitch.action = @selector(onDisplaySwitchChanged:);
-    _displaySwitch.accessibilityLabel = @"Attiva angoli su questo display";
-    _displaySwitch.accessibilityHelp = @"Attiva o disattiva gli angoli arrotondati per il monitor selezionato";
+    _displaySwitch.accessibilityLabel = @"Enable corners on this display";
+    _displaySwitch.accessibilityHelp = @"Enable or disable rounded corners for the selected display";
     [dispRow addArrangedSubview:_displaySwitch];
 
     [st addArrangedSubview:dispRow];
@@ -956,7 +956,7 @@ static void PinWindow(NSWindow *w) {
     [_mockup.heightAnchor constraintEqualToConstant:145].active = YES;
 
     // 5. Slider and Label
-    _sliderLabel = [NSTextField labelWithString:[NSString stringWithFormat:@"Raggio: %ld pt", (long)kDefaultRadius]];
+    _sliderLabel = [NSTextField labelWithString:[NSString stringWithFormat:@"Radius: %ld pt", (long)kDefaultRadius]];
     _sliderLabel.font = [NSFont systemFontOfSize:12 weight:NSFontWeightSemibold];
     _sliderLabel.textColor = NSColor.labelColor;
     _sliderLabel.accessibilityRole = NSAccessibilityStaticTextRole;
@@ -967,8 +967,8 @@ static void PinWindow(NSWindow *w) {
     _slider.numberOfTickMarks = 9;
     _slider.allowsTickMarkValuesOnly = NO;
     _slider.tickMarkPosition = NSTickMarkPositionBelow;
-    _slider.accessibilityLabel = @"Raggio degli angoli";
-    _slider.accessibilityHelp = @"Regola il raggio di curvatura degli angoli in punti";
+    _slider.accessibilityLabel = @"Corner radius";
+    _slider.accessibilityHelp = @"Adjust corner curvature radius in points";
     _slider.accessibilityRole = NSAccessibilitySliderRole;
     _slider.accessibilityMinValue = @(kMinRadius);
     _slider.accessibilityMaxValue = @(kMaxRadius);
@@ -1002,19 +1002,19 @@ static void PinWindow(NSWindow *w) {
     verLabel.font = [NSFont systemFontOfSize:11];
     verLabel.textColor = NSColor.tertiaryLabelColor;
     verLabel.accessibilityRole = NSAccessibilityStaticTextRole;
-    verLabel.accessibilityLabel = [NSString stringWithFormat:@"Versione %@", verLabel.stringValue];
+    verLabel.accessibilityLabel = [NSString stringWithFormat:@"Version %@", verLabel.stringValue];
     [footer addArrangedSubview:verLabel];
 
     NSView *spacer2 = [NSView new];
     [spacer2 setContentHuggingPriority:NSLayoutPriorityFittingSizeCompression forOrientation:NSLayoutConstraintOrientationHorizontal];
     [footer addArrangedSubview:spacer2];
 
-    NSButton *quitBtn = [NSButton buttonWithTitle:@"Esci da Rounded Corners" target:NSApp action:@selector(terminate:)];
+    NSButton *quitBtn = [NSButton buttonWithTitle:@"Quit Rounded Corners" target:NSApp action:@selector(terminate:)];
     quitBtn.bezelStyle = NSBezelStyleRounded;
     quitBtn.controlSize = NSControlSizeRegular;
     quitBtn.font = [NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSControlSizeRegular]];
-    quitBtn.accessibilityLabel = @"Esci da Rounded Corners";
-    quitBtn.accessibilityHelp = @"Chiude l'applicazione Rounded Corners";
+    quitBtn.accessibilityLabel = @"Quit Rounded Corners";
+    quitBtn.accessibilityHelp = @"Quit the Rounded Corners application";
     quitBtn.accessibilityRole = NSAccessibilityButtonRole;
     [footer addArrangedSubview:quitBtn];
 
@@ -1058,7 +1058,7 @@ static void PinWindow(NSWindow *w) {
     [_displayPopup removeAllItems];
 
     if (screens.count == 0) {
-        NSMenuItem *noneItem = [[NSMenuItem alloc] initWithTitle:@"Nessun display" action:NULL keyEquivalent:@""];
+        NSMenuItem *noneItem = [[NSMenuItem alloc] initWithTitle:@"No displays" action:NULL keyEquivalent:@""];
         [_displayPopup.menu addItem:noneItem];
         _displayPopup.enabled = NO;
         if (_dispLabel) _dispLabel.textColor = NSColor.disabledControlTextColor;
@@ -1067,14 +1067,14 @@ static void PinWindow(NSWindow *w) {
         if (_displaySwitchLabel) _displaySwitchLabel.textColor = NSColor.disabledControlTextColor;
         _mockup.displayEnabled = NO;
         _slider.enabled = NO;
-        _sliderLabel.stringValue = @"Nessun monitor rilevato";
+        _sliderLabel.stringValue = @"No displays detected";
         _sliderLabel.textColor = NSColor.disabledControlTextColor;
         if (_hintLabel) _hintLabel.stringValue = @"";
         return;
     }
 
     if (applyToAll) {
-        NSMenuItem *allItem = [[NSMenuItem alloc] initWithTitle:@"Tutti i monitor connessi" action:NULL keyEquivalent:@""];
+        NSMenuItem *allItem = [[NSMenuItem alloc] initWithTitle:@"All connected displays" action:NULL keyEquivalent:@""];
         [_displayPopup.menu addItem:allItem];
         _displayPopup.enabled = NO;
         if (_dispLabel) _dispLabel.textColor = NSColor.disabledControlTextColor;
@@ -1093,7 +1093,7 @@ static void PinWindow(NSWindow *w) {
         _slider.enabled = YES;
         _slider.integerValue = r;
         _slider.accessibilityValueDescription = [NSString stringWithFormat:@"%ld pt", (long)r];
-        _sliderLabel.stringValue = [NSString stringWithFormat:@"Raggio: %ld pt", (long)r];
+        _sliderLabel.stringValue = [NSString stringWithFormat:@"Radius: %ld pt", (long)r];
         _sliderLabel.textColor = NSColor.labelColor;
     } else {
         _displayPopup.enabled = YES;
@@ -1118,13 +1118,13 @@ static void PinWindow(NSWindow *w) {
             NSString *name = s.localizedName.length > 0 ? s.localizedName : @"Display";
             NSString *typeStr;
             if (isBuiltin) {
-                typeStr = @"Integrato";
+                typeStr = @"Built-in";
             } else {
                 externalIndex++;
                 if (externalCount > 1) {
-                    typeStr = [NSString stringWithFormat:@"Esterno %ld", (long)externalIndex];
+                    typeStr = [NSString stringWithFormat:@"External %ld", (long)externalIndex];
                 } else {
-                    typeStr = @"Esterno";
+                    typeStr = @"External";
                 }
             }
             NSString *itemTitle = [NSString stringWithFormat:@"%@ %@ (%@)", icon, name, typeStr];
@@ -1158,10 +1158,10 @@ static void PinWindow(NSWindow *w) {
             _slider.integerValue = r;
             _slider.accessibilityValueDescription = [NSString stringWithFormat:@"%ld pt", (long)r];
             if (enabled) {
-                _sliderLabel.stringValue = [NSString stringWithFormat:@"Raggio: %ld pt", (long)r];
+                _sliderLabel.stringValue = [NSString stringWithFormat:@"Radius: %ld pt", (long)r];
                 _sliderLabel.textColor = NSColor.labelColor;
             } else {
-                _sliderLabel.stringValue = [NSString stringWithFormat:@"Raggio memorizzato: %ld pt (inattivo)", (long)r];
+                _sliderLabel.stringValue = [NSString stringWithFormat:@"Stored radius: %ld pt (inactive)", (long)r];
                 _sliderLabel.textColor = NSColor.secondaryLabelColor;
             }
         }
@@ -1177,12 +1177,12 @@ static void PinWindow(NSWindow *w) {
         NSInteger r = [gc[@"radius"] integerValue];
         if (HasBuiltinScreen()) {
             if (r <= kDefaultRadius) {
-                _hintLabel.stringValue = @"Sui display Mac compatibili, gli angoli superiori vengono disegnati solo per raggi superiori a 23 pt.";
+                _hintLabel.stringValue = @"On compatible Mac displays, top corners are only drawn for radii greater than 23 pt.";
             } else {
-                _hintLabel.stringValue = @"Raggio superiore a 23 pt: gli angoli superiori verranno disegnati anche sui display Mac compatibili.";
+                _hintLabel.stringValue = @"Radius greater than 23 pt: top corners will also be drawn on compatible Mac displays.";
             }
         } else {
-            _hintLabel.stringValue = @"Le modifiche vengono applicate contemporaneamente a tutti gli schermi connessi.";
+            _hintLabel.stringValue = @"Changes are applied to all connected displays simultaneously.";
         }
     } else {
         if (_selectedDisplayUUID) {
@@ -1190,7 +1190,7 @@ static void PinWindow(NSWindow *w) {
             NSDictionary *entry = [self configForScreenUUID:_selectedDisplayUUID];
             BOOL enabled = [entry[@"enabled"] boolValue];
             if (!enabled) {
-                _hintLabel.stringValue = @"Angoli disattivati per questo display.";
+                _hintLabel.stringValue = @"Corners disabled for this display.";
                 return;
             }
             uint32_t did = s ? [s.deviceDescription[@"NSScreenNumber"] unsignedIntValue] : 0;
@@ -1198,12 +1198,12 @@ static void PinWindow(NSWindow *w) {
             NSInteger r = [entry[@"radius"] integerValue];
             if (isBuiltin) {
                 if (r <= kDefaultRadius) {
-                    _hintLabel.stringValue = @"Gli angoli superiori del display integrato sono curvati via hardware a 23 pt e vengono disegnati solo per raggi superiori.";
+                    _hintLabel.stringValue = @"Built-in display top corners are curved by hardware at 23 pt and are only drawn for larger radii.";
                 } else {
-                    _hintLabel.stringValue = @"Raggio superiore a 23 pt: gli angoli superiori verranno disegnati oltre la curvatura hardware.";
+                    _hintLabel.stringValue = @"Radius greater than 23 pt: top corners will be drawn beyond hardware curvature.";
                 }
             } else {
-                _hintLabel.stringValue = @"Tutti gli angoli selezionati verranno applicati a questo display.";
+                _hintLabel.stringValue = @"All selected corners will be applied to this display.";
             }
         }
     }
@@ -1286,7 +1286,7 @@ static void PinWindow(NSWindow *w) {
         mut[@"radius"] = @(r);
         [self setGenericConfig:mut];
         if (_sliderLabel) {
-            _sliderLabel.stringValue = [NSString stringWithFormat:@"Raggio: %ld pt", (long)r];
+            _sliderLabel.stringValue = [NSString stringWithFormat:@"Radius: %ld pt", (long)r];
             _sliderLabel.textColor = NSColor.labelColor;
         }
         [self updateHintLabel];
@@ -1304,10 +1304,10 @@ static void PinWindow(NSWindow *w) {
             if (_sliderLabel) {
                 BOOL enabled = [entry[@"enabled"] boolValue];
                 if (enabled) {
-                    _sliderLabel.stringValue = [NSString stringWithFormat:@"Raggio: %ld pt", (long)r];
+                    _sliderLabel.stringValue = [NSString stringWithFormat:@"Radius: %ld pt", (long)r];
                     _sliderLabel.textColor = NSColor.labelColor;
                 } else {
-                    _sliderLabel.stringValue = [NSString stringWithFormat:@"Raggio memorizzato: %ld pt (inattivo)", (long)r];
+                    _sliderLabel.stringValue = [NSString stringWithFormat:@"Stored radius: %ld pt (inactive)", (long)r];
                     _sliderLabel.textColor = NSColor.secondaryLabelColor;
                 }
             }
