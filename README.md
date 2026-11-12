@@ -1,34 +1,77 @@
+<div align="center">
+
+<img src="resources/AppIcon.png" alt="Rounded Corners Icon" width="128" height="128" />
+
 # Rounded Corners
 
-Rounds the corners of a Mac's display with four small black panels. A MacBook's top corners are already rounded
-by the glass, so there only the bottom ones are drawn up to 23 pt; above that all four are drawn. External
-displays get every selected corner. One Objective-C file, system frameworks only, no icon in the menu bar or
-Dock, 0% CPU at rest.
+**Rounds the corners of your Mac's display with unobtrusive, native overlays.**
 
-Opening the app shows a small window: launch at login, which corners to round, corner radius, quit. The same
-settings can apply to every connected display, or each display can be configured on its own. Closing the window
-keeps the corners active; quit with cmd+Q or "Quit Rounded Corners". Started at login it stays in the background. Once the window
-is closed there is no Dock or menu bar icon: double-click the app in Applications to reopen it.
+[![macOS 13+](https://img.shields.io/badge/macOS-13%2B-blue?logo=apple)](https://www.apple.com/macos/)
+[![Apple Silicon](https://img.shields.io/badge/platform-Apple%20Silicon-lightgrey)](https://www.apple.com/)
+[![License: PolyForm Noncommercial](https://img.shields.io/badge/License-PolyForm_Noncommercial-blue.svg)](LICENSE)
 
-Corners stay fixed during Space swipes and show over full-screen apps and the lock screen via private SkyLight
-calls; without them the app falls back to ordinary all-Spaces windows. Corner overlays are excluded from screen
-captures (`NSWindowSharingNone`), mimicking the physical rounded corners of the hardware display. macOS 13+,
-Apple Silicon only.
+</div>
 
-## Build
+---
 
-    ./build.sh            # build/Rounded Corners.app (arm64, ad-hoc signed)
-    ./build.sh install    # also install in /Applications and launch
-    ./build.sh zip        # build/RoundedCorners.zip, ready to share
-    ./build.sh dmg        # build/RoundedCorners.dmg, ready to share (drag to Applications)
-    ./build.sh test       # build and run the test suite
+## Overview
 
-Use `./build.sh install` before ticking "Launch at login": the login item points at the bundle it was registered
-from, so enabling it from `build/` leaves a broken entry as soon as `build/` is rebuilt.
+A lightweight macOS utility that rounds the corners of your screens with four small black panels:
 
-The app is not notarized. On another Mac, after unzipping and moving it to /Applications, the first launch needs
-right-click > Open, or: `xattr -dr com.apple.quarantine "/Applications/Rounded Corners.app"`.
+- **Smart Laptop Support**: A MacBook's top corners are already physically rounded by the glass display bezel, so by default only the bottom corners are drawn (up to 23 pt). Above that threshold, all four are drawn.
+- **Multi-Monitor**: External displays can have each selected corner rounded independently or share a global preset.
+- **Ultra-lightweight**: Single Objective-C file, system frameworks only, 0% CPU at rest.
+- **Zero clutter**: No menu bar icon, no Dock clutter while running in the background.
+
+## Features
+
+- **Seamless Desktop Integration**: Corners stay fixed during Space swipes and remain visible over full-screen apps and the lock screen (using private SkyLight APIs, falling back gracefully to standard all-Spaces windows).
+- **Screenshot Clean**: Corner overlays are excluded from screen captures (`NSWindowSharingNone`), naturally mimicking the physical bezel of the display.
+- **Per-Display Customization**: Easily configure radius and toggle individual corners for each connected screen or apply changes globally.
+- **Launch at Login**: Simple toggle to start automatically in the background.
+
+## Usage
+
+Opening the app reveals the preferences panel:
+- Configure corner radius and toggle individual corners.
+- Choose whether settings apply globally or per display.
+- Enable or disable **Launch at login**.
+
+Closing the window keeps the corners active while removing the app from the Dock.
+- **To reopen preferences**: Double-click the app in `/Applications`.
+- **To quit**: Press <kbd>Cmd</kbd> + <kbd>Q</kbd> while the window is open or click **"Quit Rounded Corners"**.
+
+## Build & Installation
+
+### Requirements
+- Apple Silicon Mac (M1/M2/M3/M4)
+- macOS 13 (Ventura) or newer
+- Xcode Command Line Tools (`xcode-select --install`)
+
+### Building from source
+
+```bash
+./build.sh            # build/Rounded Corners.app (arm64, ad-hoc signed)
+./build.sh install    # build, install to /Applications, and launch
+./build.sh zip        # package build/RoundedCorners.zip
+./build.sh dmg        # package build/RoundedCorners.dmg
+./build.sh test       # run the test suite
+```
+
+> **Note**: Use `./build.sh install` before enabling "Launch at login". macOS registers login items by exact bundle path; running it from `build/` will break if that directory is cleaned or rebuilt.
+
+### Gatekeeper Note
+The app is ad-hoc signed and not notarized. On another Mac, after downloading or unzipping to `/Applications`, right-click > **Open** on first launch, or run:
+
+```bash
+xattr -dr com.apple.quarantine "/Applications/Rounded Corners.app"
+```
 
 ## License
 
-MIT.
+This project is licensed under the **PolyForm Noncommercial License 1.0.0**.
+
+- **Free for Personal Use**: You are free to download, build, modify, and run this application for personal, educational, or non-profit purposes.
+- **Commercial Use Prohibited**: You may not sell, monetize, redistribute for commercial gain, or incorporate this software into commercial products without prior written permission.
+
+See the [LICENSE](LICENSE) file for the full legal terms.

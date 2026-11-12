@@ -1,21 +1,75 @@
-MIT License
+PolyForm Noncommercial License
+Version 1.0.0
+
+<https://polyformproject.org/licenses/noncommercial/1.0.0>
 
 Copyright (c) 2026 Enrico Battistoni
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+## Acceptance
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+In order to receive this license, you must agree to its rules. The
+rules of this license are both obligations under that agreement and
+conditions to your license. You must not do anything with this software
+that triggers a rule that you cannot or will not follow.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+## Copyright License
+
+The licensor grants you a copyright license to do everything you might
+do with the software that would otherwise infringe the licensor's
+copyright in it for any noncommercial purpose.
+
+## Patent License
+
+The licensor grants you a patent license for the software that covers
+any patent the licensor has or could license that would be infringed
+by using the software, as of the date the licensor first makes the
+software available under this license, for any noncommercial purpose.
+
+## Noncommercial Purposes
+
+Noncommercial purposes means any purpose other than intending to make,
+or actually making, money or other commercial advantage.
+
+Personal use, educational use, and use by a non-profit or registered
+charity are noncommercial purposes.
+
+## Notices
+
+You must ensure that everyone who gets a copy of any part of this
+software from you also receives a copy of this license and any
+copyright, patent, or trademark notices that the licensor has included
+in this software.
+
+## Modified Versions
+
+If you modify this software, you must mark your modifications in a
+reasonable way that gives notice that the software was modified. If you
+distribute this software with modifications, you must release your
+modifications under this license.
+
+## No Reverse Engineering
+
+You must not read the code of this software to create software that
+substitutes for this software in any commercial purpose.
+
+## No Other Rights
+
+These licenses are not an excuse to infringe any other intellectual
+property rights of the licensor, such as trademarks, or to infringe
+any intellectual property rights of anyone else.
+
+## Sublicensing
+
+You cannot sublicense this license or any part of it.
+
+## Defense
+
+If you sue the licensor for infringement of any patent, the patent
+license granted to you under this license ends immediately.
+
+## No Warranty
+
+As far as the law allows, this software comes as is, without any
+warranty or condition, and the licensor will not be liable to you for
+any damages arising out of this license or the use or inability to use
+this software, under any kind of legal claim.
