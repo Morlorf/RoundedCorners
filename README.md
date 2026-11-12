@@ -11,7 +11,9 @@ keeps the corners active; quit with cmd+Q or "Quit Rounded Corners". Started at 
 is closed there is no Dock or menu bar icon: double-click the app in Applications to reopen it.
 
 Corners stay fixed during Space swipes and show over full-screen apps and the lock screen via private SkyLight
-calls; without them the app falls back to ordinary all-Spaces windows. macOS 13+, Apple Silicon only.
+calls; without them the app falls back to ordinary all-Spaces windows. Corner overlays are excluded from screen
+captures (`NSWindowSharingNone`), mimicking the physical rounded corners of the hardware display. macOS 13+,
+Apple Silicon only.
 
 ## Build
 
